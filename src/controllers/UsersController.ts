@@ -60,7 +60,7 @@ class UsersController {
 
       const user = await prisma.user.findFirst({
         where: {
-          id: payload.id,
+          id: req.params.id,
         },
       });
 
@@ -80,7 +80,7 @@ class UsersController {
       const payload = req.body;
 
       const user = await prisma.user.update({
-        where: { id: payload.id },
+        where: { id: req.params.id },
         data: { name: payload.name }
       });
 
@@ -102,7 +102,7 @@ class UsersController {
       const payload = req.body;
 
       const user = await prisma.user.delete({
-        where: { id: payload.id },
+        where: { id: req.params.id },
       })
 
       return res.status(200).json({ success: true, msg: "✔️ User deleted successfully!", data: user });
