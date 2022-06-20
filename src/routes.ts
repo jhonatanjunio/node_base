@@ -1,15 +1,23 @@
+import { Application } from "express";
 import UsersController from "./controllers/UsersController";
-import AbstractRouter from "./helpers/AbstractRouter";
+import { Router } from "./helpers/Router";
 
-const router = new AbstractRouter();
+export function setupRoutes(app: Application) {
+  const router = new Router(app);
 
-router.resource("/users", (usersRouter) => {
-  usersRouter.get("/",        UsersController.index);
-  usersRouter.post("/",       UsersController.create);
-  usersRouter.get("/:id",     UsersController.show);
-  usersRouter.put("/:id",     UsersController.update);
-  usersRouter.delete("/:id",  UsersController.delete);
-});
+  router.group("/api", (router) => {
+    router.group("/v1", (router) => {
+      router.get("/", (req, res) => {
+        return { status: "ok", message: "Working!" };
+      });
+    });
+  });
 
-
-export default router.routes;
+  router.group("/users", (router) => {
+    router.get("/", UsersController.index);
+    router.get("/:id", UsersController.show);
+    router.post("/", UsersController.create);
+    router.put("/:id", UsersController.update);
+    router.delete("/:id", UsersController.delete);
+  });
+}
